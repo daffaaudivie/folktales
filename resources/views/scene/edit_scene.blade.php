@@ -13,7 +13,7 @@
 
         <!-- Dropdown Story -->
             <div class="mb-6">
-                <label for="story_id" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Story</label>
+                <label for="story_id" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Story</label>
                 <select name="story_id" id="story_id" disabled class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600">
                     @foreach ($m_story as $story)
                         <option value="{{ $story->story_id }}" {{ $scene->story_id == $story->story_id ? 'selected' : '' }}>{{ $story->title }}</option>
@@ -33,16 +33,16 @@
                 <label class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Gambar</label>
                 @if ($scene->picture)
                     <div class="mb-4">
-                        <img src="{{ asset('storage/' . $scene->picture) }}" alt="Scene Image" class="w-full h-60 object-cover rounded-lg shadow-md">
+                        <img src="{{ asset('storage/' . $scene->picture) }}" alt="Scene Image" class="w-150 h-80 object-cover rounded-lg shadow-md">
                     </div>
                 @endif
                 <input type="file" name="picture" id="picture" class="block w-full text-sm text-gray-900 border rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600">
-                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">File types: jpeg, png, jpg, gif, svg (Max: 2MB)</p>
+                <p class="mt-1 text-sm text-gray-500 dark:text-gray-300">File types: jpeg, png, jpg, gif, svg</p>
 
                 <!-- Image Preview -->
-                <div class="mt-4">
+                <div class="mt-4 w-full">
                     <p class="text-sm text-gray-500 dark:text-gray-300">Preview Gambar:</p>
-                    <img id="image-preview" class="w-full h-60 object-cover rounded-lg shadow-md hidden">
+                    <img id="image-preview" class="w-80 h-80 object-cover rounded-lg shadow-md hidden">
                 </div>
             </div>
 
@@ -70,7 +70,7 @@
 
             <!-- Order -->
             <div class="mb-6">
-                <label for="order" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Urutan Scene</label>
+                <label for="order" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Scene Order</label>
                 <input type="number" id="order" name="order" value="{{ $scene->order }}" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600">
             </div>
 

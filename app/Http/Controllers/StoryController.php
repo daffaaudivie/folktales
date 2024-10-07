@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Story; 
 use App\Models\Scene; 
+use App\Models\AssesmentMultiple; 
 use Illuminate\Support\Facades\Storage;
 
 class StoryController extends Controller
@@ -68,8 +69,26 @@ class StoryController extends Controller
     ]);
 
     return redirect()->route('story.index')->with('success', 'Berhasil Menyimpan Data');
-}
+}public function edit($story_id)
+{
+    // Mengambil data story berdasarkan id
+    $story = Story::findOrFail($story_id);
+    
+    // Mengambil daftar provinsi untuk dropdown
+    $response = file_get_contents('https://dev.farizdotid.com/api/daerahindonesia/provinsi');
+    $provinces = json_decode($response, true);
+    
+    $provinceList = [];
+    foreach ($provinces['provinsi'] as $province) {
+        $provinceList[] = [
+            'id' => $province['id'],
+            'name' => $province['nama']
+        ];
+    }
 
+    // Mengirim data ke view
+    return view('story.edit_story', compact('story', 'provinceList'));
+}
 
 
     public function update(Request $request, $story_id)
@@ -78,7 +97,7 @@ class StoryController extends Controller
             'title' => 'required|string|max:255',
             'desc' => 'nullable|string',
             'province' => 'nullable|string|max:50',
-            'cover' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'cover' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:5048',
             'status' => 'required|boolean',
         ]);
 
@@ -132,12 +151,36 @@ class StoryController extends Controller
     }
 
     public function show($story_id)
-        {
-            $story = Story::findOrFail($story_id);
-            $scenes = Scene::where('story_id', $story_id)->get();
+    {
+        $story = Story::findOrFail($story_id);
+        $scenes = Scene::where('story_id', $story_id)->get();
+        $multipleChoices = AssesmentMultiple::where('story_id', $story_id)->get();
+
+        return view('story.detail_story', compact('story', 'scenes', 'multipleChoices'));
+    }
+
+        public function createScene($story_id)
+{
+    // Mengambil data story berdasarkan id
+    $story = Story::findOrFail($story_id);
     
-            return view('story.detail_story', compact('story', 'scenes'));
-        }
+    // Mengambil daftar provinsi untuk dropdown (jika diperlukan)
+    $response = file_get_contents('https://dev.farizdotid.com/api/daerahindonesia/provinsi');
+    $provinces = json_decode($response, true);
+    
+    $provinceList = [];
+    foreach ($provinces['provinsi'] as $province) {
+        $provinceList[] = [
+            'id' => $province['id'],
+            'name' => $province['nama']
+        ];
+    }
+
+    // Mengirim data ke view
+    return view('story.create_scene', compact('story', 'provinceList'));
+}
+
+
     }
 
 

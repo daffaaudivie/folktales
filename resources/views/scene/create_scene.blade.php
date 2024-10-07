@@ -31,11 +31,13 @@
             <!-- Input gambar untuk Scene -->
             <div class="mb-4">
                 <label for="picture" class="block text-sm font-medium text-gray-700">Gambar Scene</label>
-                <input type="file" name="picture" id="picture" required
+                <input type="file" name="picture" id="picture" required accept="image/*"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-500" />
                 @error('picture')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
+                <!-- Preview Gambar -->
+                <img id="imagePreview" class="mt-4 w-full h-auto hidden" />
             </div>
 
             <!-- Textarea untuk narasi -->
@@ -51,11 +53,16 @@
             <!-- Input file untuk voice over -->
             <div class="mb-4">
                 <label for="voice_over" class="block text-sm font-medium text-gray-700">Voice Over</label>
-                <input type="file" name="voice_over" id="voice_over" required
+                <input type="file" name="voice_over" id="voice_over" required accept="audio/*"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-500" />
                 @error('voice_over')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
+                <!-- Preview Voice Over -->
+                <audio id="audioPreview" class="mt-4 w-full hidden" controls>
+                    <source id="audioSource" src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
             </div>
 
             <!-- Input urutan scene -->
@@ -74,4 +81,38 @@
             </button>
         </form>
     </div>
+
+    <script>
+        document.getElementById('picture').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const imagePreview = document.getElementById('imagePreview');
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.classList.remove('hidden');
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('voice_over').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const audioPreview = document.getElementById('audioPreview');
+            const audioSource = document.getElementById('audioSource');
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                audioSource.src = e.target.result;
+                audioPreview.load(); // Reload audio element
+                audioPreview.classList.remove('hidden');
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 </x-app-layout>

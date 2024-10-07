@@ -44,8 +44,6 @@
                 @enderror
             </div>
 
-
-
             <div class="mb-4">
                 <label for="cover" class="block text-sm font-medium text-gray-700">Cover</label>
                 <input type="file" name="cover" id="cover" required
@@ -53,14 +51,19 @@
                 @error('cover')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
+                <!-- Preview Gambar -->
+                <div class="mt-4">
+                    <p class="text-sm text-gray-500">Preview Gambar:</p>
+                    <img id="cover-preview" class="mt-2 w-80 h-80 object-cover rounded-md hidden" />
+                </div>
             </div>
 
             <div class="mb-4">
                 <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                 <select name="status" id="status" required
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-500">
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
+                    <option value="1">Aktif</option>
+                    <option value="0">Nonaktif</option>
                 </select>
                 @error('status')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -72,4 +75,22 @@
             </button>
         </form>
     </div>
+
+    <!-- JavaScript untuk Preview Gambar -->
+    <script>
+        document.getElementById('cover').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById('cover-preview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden'); // Menampilkan gambar preview
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.classList.add('hidden'); // Menyembunyikan preview jika tidak ada file
+            }
+        });
+    </script>
 </x-app-layout>
