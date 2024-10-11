@@ -18,6 +18,17 @@ class MultipleController extends Controller
         return view('multiple.multiple', compact('t_assesment_multiple'));
     }
 
+    public function showAssessmentDetail($story_id)
+    {
+        // Ambil story berdasarkan ID
+        $story = Story::findOrFail($story_id);
+
+        // Ambil semua assessment yang terkait dengan story ini
+        $assessments = AssesmentMultiple::where('story_id', $story_id)->get();
+
+        return view('story.detail_story', compact('story', 'assessments', 'scenes', 'multipleChoices'));
+    }
+
     // Menampilkan form pembuatan assessment
     public function create()
     {
@@ -48,7 +59,9 @@ class MultipleController extends Controller
         // Simpan data assessment baru
         AssesmentMultiple::create($request->all());
 
-        return redirect()->route('multiple.index')->with('success', 'Assessment created successfully.');
+        return redirect()->route('story.detail', ['story_id' => $request->story_id])
+                     ->withFragment('multiple') // Mengarahkan ke section
+                     ->with('success', 'Assessment created successfully.');
     }
 
     // Menampilkan form edit assessment
@@ -65,7 +78,7 @@ class MultipleController extends Controller
     {
         // Validasi input
         $request->validate([
-            'story_id' => 'required|exists:m_story,story_id',
+            'story_id' => 'nullable|exists:m_story,story_id',
             'question' => 'required|string|max:255',
             'opt_1' => 'required|string|max:255',
             'opt_2' => 'required|string|max:255',
@@ -78,9 +91,15 @@ class MultipleController extends Controller
         $assessment = AssesmentMultiple::findOrFail($id_asses);
 
         // Update data assessment
-        $assessment->update($request->all());
+        $storyId = $assessment->story_id;
 
-        return redirect()->route('multiple.index')->with('success', 'Assessment updated successfully.');
+        // Update data assessment
+        $assessment->update($request->all());
+    
+        // Redirect ke halaman detail story setelah berhasil update
+        return redirect()->route('story.detail', ['story_id' => $storyId])
+                         ->with('success', 'Assessment edited successfully.')
+                         ->withFragment('multiple');
     }
 
     // Menghapus data assessment
@@ -89,10 +108,14 @@ class MultipleController extends Controller
         // Cari assessment berdasarkan ID
         $assessment = AssesmentMultiple::findOrFail($id_asses);
 
+        $storyId = $assessment->story_id;
+
         // Hapus data assessment
         $assessment->delete();
 
-        return redirect()->route('multiple.index')->with('success', 'Assessment deleted successfully.');
+        return redirect()->route('story.detail', ['story_id' => $storyId])
+                        ->with('success', 'Assessment deleted successfully.')
+                        ->withFragment('multiple');
     }
 
     // Menampilkan detail data berdasarkan story_id

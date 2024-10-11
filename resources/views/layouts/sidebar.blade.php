@@ -19,7 +19,7 @@
                 </ul>
             </li>
 
-            <li x-data="{ open: false }">
+            <!-- <li x-data="{ open: false }">
                 <button @click="open = !open" class="flex items-center justify-between w-full py-2 px-4 hover:bg-gray-900 rounded">
                     <span>Scene</span>
                     <svg :class="{'rotate-180': open}" class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -44,7 +44,7 @@
                     <li><a href="{{ url('/landingpage') }}" class="block py-2 px-4 hover:bg-gray-700 rounded">Assessment True/False</a></li>
                     <li><a href="{{ url('/landingpage') }}" class="block py-2 px-4 hover:bg-gray-700 rounded">Assessment Matching</a></li>
                 </ul>
-            </li>
+            </li> -->
         </ul>
     </div>
 

@@ -7,7 +7,7 @@
         </div>
 
         <!-- Form Edit Story -->
-        <form action="{{ route('story.update', $story->story_id) }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg p-6">
+        <form id="story" action="{{ route('story.update', $story->story_id) }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg p-6">
             @csrf
             @method('PUT')
 
@@ -28,7 +28,7 @@
                 <label for="province" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Pilih Provinsi</label>
                 <select name="province" id="province" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600">
                     @foreach ($provinceList as $province)
-                        <option value="{{ $province['id'] }}" {{ $story->province == $province['id'] ? 'selected' : '' }}>{{ $province['name'] }}</option>
+                        <option value="{{ $province['name'] }}" {{ $story->province == $province['name'] ? 'selected' : '' }}>{{ $province['name'] }}</option>
                     @endforeach
                 </select>
             </div>
@@ -62,7 +62,7 @@
 
             <!-- Tombol Simpan -->
             <div class="text-center mt-4 flex justify-center">
-                <button type="submit" class="flex justify-center items-center bg-green-400 hover:bg-green-500 text-dark-400 font-semibold py-2 px-4 rounded-lg">
+                <button type="button" onclick="confirmEdit()" class="flex justify-center items-center bg-green-400 hover:bg-green-500 text-dark-400 font-semibold py-2 px-4 rounded-lg">
                     Simpan Perubahan
                 </button>
             </div>
@@ -86,5 +86,31 @@
                 preview.classList.add('hidden');
             }
         });
+    </script>
+    <script>
+        function confirmEdit() {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: "Apakah Anda yakin ingin mengedit data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, simpan!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan SweetAlert untuk berhasil menyimpan data
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: 'Data berhasil diedit.',
+                        icon: 'success',
+                        confirmButtonText: 'Oke'
+                    }).then(() => {
+                        // Kirim form setelah pengguna menekan "Oke"
+                        document.getElementById('story').submit();
+                    });
+                }
+            });
+        }
     </script>
 </x-app-layout>

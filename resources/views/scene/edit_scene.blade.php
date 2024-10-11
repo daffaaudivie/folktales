@@ -7,7 +7,7 @@
         </div>
 
         <!-- Form Edit Scene -->
-        <form action="{{ route('scene.update', $scene->scene_story_id) }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg p-6">
+        <form id="scene" action="{{ route('scene.update', $scene->scene_story_id) }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg p-6">
             @csrf
             @method('PUT')
 
@@ -75,11 +75,10 @@
             </div>
 
             <!-- Tombol Submit -->
-            <div class="flex justify-center text-center mt-4">
-                <button type="submit" class="flex justify-center items-center bg-green-400 hover:bg-green-500 text-dark-400 font-semibold py-2 px-4 rounded-lg">
-                    Simpan Perubahan
-                </button>
-            </div>
+            <div class="mt-6 flex justify-center text-center mt-4">
+                <button type="button" onclick="confirmEdit()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300">
+                    Save Data
+            </button>
 
 </div>
 
@@ -118,5 +117,31 @@
                 preview.classList.add('hidden');
             }
         });
+    </script>
+    <script>
+        function confirmEdit() {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: "Apakah Anda yakin ingin mengedit data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, simpan!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan SweetAlert untuk berhasil menyimpan data
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: 'Data berhasil diedit.',
+                        icon: 'success',
+                        confirmButtonText: 'Oke'
+                    }).then(() => {
+                        // Kirim form setelah pengguna menekan "Oke"
+                        document.getElementById('scene').submit();
+                    });
+                }
+            });
+        }
     </script>
 </x-app-layout>

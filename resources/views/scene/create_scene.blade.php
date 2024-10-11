@@ -8,7 +8,7 @@
             </div>
         @endif
 
-        <form action="{{ route('scene.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="scene" action="{{ route('scene.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <!-- Dropdown untuk memilih story -->
@@ -76,9 +76,12 @@
                 @enderror
             </div>
 
-            <button type="submit" class="w-full mt-4 p-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
-                Simpan Scene
-            </button>
+            <div class="mt-6">
+                <!-- Change button type to button to avoid automatic form submission -->
+                <button type="button" onclick="confirmCreate()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300">
+                    Simpan Data
+                </button>
+            </div>  
         </form>
     </div>
 
@@ -114,5 +117,31 @@
                 reader.readAsDataURL(file);
             }
         });
+    </script>
+    <script>
+        function confirmCreate() {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: "Apakah Anda yakin ingin menyimpan data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, simpan!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan SweetAlert untuk berhasil menyimpan data
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: 'Data berhasil disimpan.',
+                        icon: 'success',
+                        confirmButtonText: 'Oke'
+                    }).then(() => {
+                        // Kirim form setelah pengguna menekan "Oke"
+                        document.getElementById('scene').submit();
+                    });
+                }
+            });
+        }
     </script>
 </x-app-layout>

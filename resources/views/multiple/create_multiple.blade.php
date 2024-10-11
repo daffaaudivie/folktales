@@ -3,7 +3,8 @@
         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center">Tambah Data Assessment Multiple Choice</h2>
         <p class="mt-2 text-gray-600 dark:text-gray-400 text-center">Silakan isi form di bawah ini</p>
 
-        <form action="{{ route('multiple.store') }}" method="POST" class="mt-6">
+        <!-- Tambahkan ID 'multipleChoiceForm' -->
+        <form id="multipleChoiceForm" action="{{ route('multiple.store') }}" method="POST" class="mt-6">
             @csrf
 
             <div class="mb-4">
@@ -62,21 +63,50 @@
             <div class="mb-4">
                 <label for="answer" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Answer</label>
                 <select id="answer" name="answer" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 dark:bg-gray-800 dark:text-white">
-                <option value="opt_1">Opsi 1</option>
-                <option value="opt_2">Opsi 2</option>
-                <option value="opt_3">Opsi 3</option>
-                <option value="opt_4">Opsi 4</option>
+                    <option value="opt_1">Opsi 1</option>
+                    <option value="opt_2">Opsi 2</option>
+                    <option value="opt_3">Opsi 3</option>
+                    <option value="opt_4">Opsi 4</option>
                 </select>
                 @error('answer')
                     <span class="text-red-500 text-sm">{{ $message }}</span>
                 @enderror
             </div>
 
-            
-
             <div class="mt-6">
-                <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300">Simpan Data</button>
+                <!-- Ubah button type menjadi 'button' agar tidak langsung submit -->
+                <button type="button" onclick="confirmCreate()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300">
+                    Simpan Data
+                </button>
             </div>
         </form>
     </div>
+
+    <script>
+        function confirmCreate() {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: "Apakah Anda yakin ingin menyimpan data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, simpan!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan SweetAlert untuk berhasil menyimpan data
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: 'Data berhasil disimpan.',
+                        icon: 'success',
+                        confirmButtonText: 'Oke'
+                    }).then(() => {
+                        // Kirim form setelah pengguna menekan "Oke"
+                        document.getElementById('multipleChoiceForm').submit();
+                    });
+                }
+            });
+        }
+    </script>
+
 </x-app-layout>

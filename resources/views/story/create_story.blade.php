@@ -8,7 +8,7 @@
             </div>
         @endif
 
-        <form action="{{ route('story.store') }}" method="POST" enctype="multipart/form-data">
+        <form id="story" action="{{ route('story.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             
             <div class="mb-4">
@@ -70,7 +70,7 @@
                 @enderror
             </div>
 
-            <button type="submit" class="w-full mt-4 p-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
+            <button type="button" onclick="confirmCreate()" class= "w-full mt-4 p-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600">
                 Simpan Cerita
             </button>
         </form>
@@ -92,5 +92,31 @@
                 preview.classList.add('hidden'); // Menyembunyikan preview jika tidak ada file
             }
         });
+    </script>
+    <script>
+        function confirmCreate() {
+            Swal.fire({
+                title: 'Konfirmasi',
+                text: "Apakah Anda yakin ingin menyimpan data ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, simpan!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Tampilkan SweetAlert untuk berhasil menyimpan data
+                    Swal.fire({
+                        title: 'Sukses!',
+                        text: 'Data berhasil disimpan.',
+                        icon: 'success',
+                        confirmButtonText: 'Oke'
+                    }).then(() => {
+                        // Kirim form setelah pengguna menekan "Oke"
+                        document.getElementById('story').submit();
+                    });
+                }
+            });
+        }
     </script>
 </x-app-layout>

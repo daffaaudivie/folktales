@@ -1,13 +1,14 @@
 <x-app-layout>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <div class="max-w-4xl mx-auto py-8">
         <!-- Judul Halaman -->
         <div class="mb-6 text-center">
-            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">Edit Multiple Assessment</h2>
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">Edit True/False Assessment</h2>
             <p class="mt-2 text-gray-600 dark:text-gray-400">Edit detail assessment yang telah dibuat</p>
         </div>
 
         <!-- Form Edit Assessment -->
-        <form id="multiple" action="{{ route('multiple.update', $assessment->id_asses) }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg p-6">
+        <form id="trueFalseForm" action="{{ route('truefalse.update', $assessment->id_asses) }}" method="POST" class="bg-white shadow-md rounded-lg p-6">
             @csrf
             @method('PUT')
 
@@ -24,32 +25,22 @@
             <!-- Question -->
             <div class="mb-6">
                 <label for="question" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Question</label>
-                <input id="question" name="question" rows="4" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600" value="{{ $assessment->question }}" placeholder="Enter the question..."></input>
+                <textarea id="question" name="question" rows="4" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600" placeholder="Enter the question...">{{ $assessment->question }}</textarea>
             </div>
-
-            <!-- Options -->
-            @for ($i = 1; $i <= 4; $i++)
-                <div class="mb-6">
-                    <label for="opt_{{ $i }}" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Option {{ $i }}</label>
-                    <input type="text" id="opt_{{ $i }}" name="opt_{{ $i }}" value="{{ $assessment['opt_'.$i] }}" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600" placeholder="Enter option {{ $i }}">
-                </div>
-            @endfor
 
             <!-- Answer -->
             <div class="mb-6">
                 <label for="answer" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Correct Answer</label>
                 <select name="answer" id="answer" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600">
-                    @for ($i = 1; $i <= 4; $i++)
-                        <option value="opt_{{ $i }}" {{ $assessment->answer == 'opt_'.$i ? 'selected' : '' }}>Option {{ $i }}</option>
-                    @endfor
+                    <option value="1" {{ $assessment->answer ? 'selected' : '' }}>True</option>
+                    <option value="0" {{ !$assessment->answer ? 'selected' : '' }}>False</option>
                 </select>
             </div>
 
             <!-- Tombol Submit -->
-            <div class="flex justify-center text-center mt-4">
-                <!-- Ubah type submit menjadi button -->
-                <button type="button" onclick="confirmEdit()" class="flex justify-center items-center bg-green-400 hover:bg-green-500 text-dark-400 font-semibold py-2 px-4 rounded-lg">
-                    Simpan Perubahan
+            <div class="mt-6 flex justify-center text-center mt-4">
+                <button type="button" onclick="confirmEdit()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300">
+                    Save Data
                 </button>
             </div>
         </form>
@@ -75,7 +66,7 @@
                         confirmButtonText: 'Oke'
                     }).then(() => {
                         // Kirim form setelah pengguna menekan "Oke"
-                        document.getElementById('multiple').submit();
+                        document.getElementById('trueFalseForm').submit();
                     });
                 }
             });

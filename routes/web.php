@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoryController;
 use App\Http\Controllers\SceneController;
 use App\Http\Controllers\MultipleController;
+use App\Http\Controllers\TrueFalseController;
+use App\Http\Controllers\MatchingController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,25 +33,39 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-//story
+// story
 Route::resource('story', StoryController::class);
-Route::get('/story/{story_id}', [StoryController::class, 'show'])->name('story.show');
+Route::get('/story/{story_id}', [StoryController::class, 'show'])->name('story.detail_story'); // Keep this for detail
 Route::get('/create_story', [StoryController::class, 'create'])->name('story.create_story');
-Route::get('/story/{story_id}', [StoryController::class, 'show'])->name('story.detail_story');
 Route::get('/story/{story_id}/scene/create', [StoryController::class, 'createScene'])->name('scene.create');
 Route::post('/story/{story_id}/scene', [StoryController::class, 'storeScene'])->name('scene.store');
-
 
 // Scene routes
 Route::resource('scene', SceneController::class);
 Route::get('/scene/{scene_id}', [SceneController::class, 'show'])->name('scene.show'); 
 Route::get('/create_scene', [SceneController::class, 'create'])->name('scene.create_scene'); 
 
+// Multiple Choice routes
 Route::resource('multiple', MultipleController::class);
 Route::get('/create_multiple', [MultipleController::class, 'create'])->name('multiple.create');
 Route::post('/create_multiple', [MultipleController::class, 'store'])->name('multiple.store');
 
+// True/False routes
+Route::resource('truefalse', TrueFalseController::class);
+Route::get('/story/{story_id}/truefalse', [TrueFalseController::class, 'detail'])->name('truefalse.detail');
+Route::get('/create_tf', [TrueFalseController::class, 'create'])->name('truefalse.create');
+Route::post('/create_tf', [TrueFalseController::class, 'store'])->name('truefalse.store');
+Route::get('/story/{story_id}', [TrueFalseController::class, 'showAssessmentDetail'])->name('story.detail');
+
+Route::resource('truefalse', TrueFalseController::class);
+Route::get('/create_matching', [MatchingController::class, 'create'])->name('matching.create');
+Route::post('/create_matching', [MatchingController::class, 'store'])->name('matching.store');
+Route::get('/matching/edit/{id_asses}', [MatchingController::class, 'edit'])->name('matching.edit');
+
+
+
+
+
 
 
 require __DIR__.'/auth.php';
-

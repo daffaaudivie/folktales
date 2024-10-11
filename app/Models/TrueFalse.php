@@ -5,28 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class AssesmentMultiple extends Model
+class TrueFalse extends Model
 {
     use HasFactory;
 
-    protected $table = 't_assesment_multiple';
-    
-    // Menentukan kolom yang dapat diisi
+    protected $table = 't_assesment_tf'; 
+
+    // Kolom yang dapat diisi
     protected $fillable = [
         'story_id',
         'question',
-        'opt_1',
-        'opt_2',
-        'opt_3',
-        'opt_4',
         'answer',
+        'is_delete',
     ];
 
     public $timestamps = false;
-    
-    protected $primaryKey = 'id_asses';
 
-     public function story()
+    protected $primaryKey = 'id_asses'; // Primary key di tabel
+
+    // Relasi ke model Story
+    public function story()
     {
         return $this->belongsTo(Story::class, 'story_id', 'story_id');
     }

@@ -50,13 +50,15 @@
                             {{ $story->status ? 'Active' : 'Inactive' }}
                         </td>
                         <td class="px-6 py-4">
-                            <a href="{{ route('story.detail_story', $story->story_id) }}">
-                                <button type="button" class="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">Detail</button>
+                            <a href="{{ route('story.detail', $story->story_id) }}">
+                                <button type="button" class="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                    Detail
+                                </button>
                             </a>
                             <a href="{{ route('story.edit', $story->story_id) }}">
                                 <button type="button" class="text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">Edit</button>
                             </a>
-                            <form action="{{ route('story.destroy', $story->story_id) }}" method="POST" class="inline">
+                            <form action="{{ route('story.destroy', $story->story_id) }}" method="POST" onsubmit="return confirmDelete(event)" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Delete</button>
@@ -67,4 +69,24 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        function confirmDelete(event) {
+            event.preventDefault(); // Mencegah form dikirim secara langsung
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Delete'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit form setelah konfirmasi
+                    event.target.submit();
+                }
+            });
+        }
+    </script>
 </x-app-layout>

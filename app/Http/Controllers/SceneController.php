@@ -62,7 +62,9 @@ class SceneController extends Controller
             'order' => $request->order,
         ]);
 
-        return redirect()->route('scene.index')->with('success', 'Berhasil Menyimpan Data');
+        return redirect()->route('story.detail', ['story_id' => $request->story_id])
+                        ->withFragment('scene') // Mengarahkan ke section
+                        ->with('success', 'Assessment created successfully.');
     }
 
     // Menampilkan form edit scene
@@ -75,53 +77,58 @@ class SceneController extends Controller
     }
 
     // Mengupdate data scene
-    public function update(Request $request, $scene_story_id)
-    {
-        $request->validate([
-            'story_id' => 'required|numeric',
-            'picture' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'narasi' => 'nullable|string',
-            'voice_over' => 'nullable|mimes:mp3,wav,aac|max:10240',
-            'order'  => 'required|numeric',
-        ]);
+    public function update(Request $request, string $scene_story_id)
+{
+    $request->validate([
+        'story_id' => 'nullable|exists:m_story,story_id',
+        'picture' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'narasi' => 'nullable|string',
+        'voice_over' => 'nullable|mimes:mp3,wav,aac|max:10240',
+        'order' => 'required|numeric',
+    ]);
 
-        $scene = Scene::findOrFail($scene_story_id);
+    // Find the scene based on the provided ID
+    $scene = Scene::findOrFail($scene_story_id);
 
-        // Cek jika ada file foto yang baru diupload
-        $fotoPath = $scene->picture; // Simpan foto lama sebagai default
-        if ($request->hasFile('picture')) {
-            // Hapus foto lama jika ada
-            if ($scene->picture) {
-                Storage::disk('public')->delete($scene->picture);
-            }
+    // Store the old file paths
+    $fotoPath = $scene->picture;
+    $voicePath = $scene->voice_over;
 
-            // Simpan foto baru
-            $fotoPath = $request->file('picture')->store('scene', 'public');
+    // Handle picture upload
+    if ($request->hasFile('picture')) {
+        if ($scene->picture) {
+            Storage::disk('public')->delete($scene->picture);
         }
-
-        // Cek jika ada file voice over yang baru diupload
-        $voicePath = $scene->voice_over; // Simpan voice lama sebagai default
-        if ($request->hasFile('voice_over')) {
-            // Hapus voice lama jika ada
-            if ($scene->voice_over) {
-                Storage::disk('public')->delete($scene->voice_over);
-            }
-
-            // Simpan voice baru
-            $voicePath = $request->file('voice_over')->store('voice', 'public');
-        }
-
-        // Update data ke database
-        $scene->update([
-            'story_id' => $request->story_id,
-            'picture' => $fotoPath,
-            'narasi' => $request->narasi,
-            'voice_over' => $voicePath,
-            'order' => $request->order,
-        ]);
-
-        return redirect()->route('story.detail_story', ['story_id' => $request->story_id])->with('success', 'Berhasil Mengupdate Data');
+        $fotoPath = $request->file('picture')->store('scene', 'public');
     }
+
+    // Handle voice over upload
+    if ($request->hasFile('voice_over')) {
+        if ($scene->voice_over) {
+            Storage::disk('public')->delete($scene->voice_over);
+        }
+        $voicePath = $request->file('voice_over')->store('voice', 'public');
+    }
+
+    // Update scene data
+    $scene->update([
+        'picture' => $fotoPath,
+        'narasi' => $request->narasi,
+        'voice_over' => $voicePath,
+        'order' => $request->order,
+    ]);
+
+    $storyId = $scene->story_id;
+
+    // Update data assessment
+    $scene->update($request->all());
+
+    // Redirect back to the story detail page
+    return redirect()->route('story.detail', ['story_id' => $storyId])
+                     ->with('success', 'Assessment edited successfully.')
+                     ->withFragment('scene');
+}
+
 
     // Menghapus data scene
     public function destroy($scene_story_id)
@@ -139,9 +146,15 @@ class SceneController extends Controller
         }
 
         // Hapus data dari database
+        $storyId = $scene->story_id;
+
+        // Hapus data assessment
         $scene->delete();
 
-        return redirect()->route('scene.index')->with('success', 'Berhasil Menghapus Data');
+        // Redirect ke detail story
+        return redirect()->route('story.detail', ['story_id' => $storyId])
+                        ->with('success', 'Assessment deleted successfully.')
+                        ->withFragment('truefalse');
     }
 
 
@@ -156,6 +169,17 @@ class SceneController extends Controller
         // Kembalikan view dengan variabel story dan t_scene_story
         return view('story.detail_story', compact('story', 't_scene_story'));
     }
+
+    public function showAssessmentDetail($story_id)
+{
+    // Ambil story berdasarkan ID
+    $story = Story::findOrFail($story_id);
+
+    // Ambil semua assessment yang terkait dengan story ini
+    $t_scene_story = Scene::where('story_id', $story_id)->get();
+
+    return view('story.detail_story', compact('story', 't_scene_story', 'scenes', 'multipleChoices'));
+}
     
 
 }

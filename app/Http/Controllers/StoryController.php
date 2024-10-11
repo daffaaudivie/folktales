@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Story; 
 use App\Models\Scene; 
 use App\Models\AssesmentMultiple; 
+use App\Models\TrueFalse; 
+use App\Models\Matching; 
 use Illuminate\Support\Facades\Storage;
 
 class StoryController extends Controller
@@ -69,8 +71,10 @@ class StoryController extends Controller
     ]);
 
     return redirect()->route('story.index')->with('success', 'Berhasil Menyimpan Data');
-}public function edit($story_id)
-{
+    }
+    
+    public function edit($story_id)
+    {
     // Mengambil data story berdasarkan id
     $story = Story::findOrFail($story_id);
     
@@ -155,9 +159,12 @@ class StoryController extends Controller
         $story = Story::findOrFail($story_id);
         $scenes = Scene::where('story_id', $story_id)->get();
         $multipleChoices = AssesmentMultiple::where('story_id', $story_id)->get();
+        $trueFalseQuestions = TrueFalse::where('story_id', $story_id)->get();
+        $matching = Matching::where('story_id', $story_id)->first(); // Assuming there's only one matching per story
 
-        return view('story.detail_story', compact('story', 'scenes', 'multipleChoices'));
+        return view('story.detail_story', compact('story', 'scenes', 'multipleChoices', 'trueFalseQuestions', 'matching'));
     }
+
 
         public function createScene($story_id)
 {
