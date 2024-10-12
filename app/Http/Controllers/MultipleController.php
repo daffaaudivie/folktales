@@ -9,10 +9,8 @@ use Illuminate\Support\Facades\Storage;
 
 class MultipleController extends Controller
 {
-    // Menampilkan semua data dari t_assesment_multiple beserta relasinya
     public function index()
     {
-        // Ambil semua data dari t_assesment_multiple
         $t_assesment_multiple = AssesmentMultiple::with('story')->get();
 
         return view('multiple.multiple', compact('t_assesment_multiple'));
@@ -20,34 +18,26 @@ class MultipleController extends Controller
 
     public function showAssessmentDetail($story_id)
     {
-        // Ambil story berdasarkan ID
         $story = Story::findOrFail($story_id);
 
-        // Ambil semua assessment yang terkait dengan story ini
         $assessments = AssesmentMultiple::where('story_id', $story_id)->get();
 
         return view('story.detail_story', compact('story', 'assessments', 'scenes', 'multipleChoices'));
     }
 
-    // Menampilkan form pembuatan assessment
-    public function create()
+    public function create(Request $request)
     {
-        // Ambil semua data dari m_story untuk dropdown
-        $stories = Story::all();
-
-        // Ambil semua assessment untuk ditampilkan
-        $assessments = AssesmentMultiple::with('story')->get(); 
-
-        return view('multiple.create_multiple', compact('stories', 'assessments')); 
+   
+        $storyId = $request->query('story_id');
+        $story = Story::findOrFail($storyId); 
+    
+        return view('multiple.create_multiple', compact('story'));
     }
-
-    // Menyimpan data assessment baru
     public function store(Request $request)
     {
         // dd($request->all());
-        // Validasi input
         $request->validate([
-            'story_id' => 'required|exists:m_story,story_id', // Pastikan sesuai dengan nama tabel di database
+            'story_id' => 'required|exists:m_story,story_id', 
             'question' => 'required|string|max:255',
             'opt_1' => 'required|string|max:255',
             'opt_2' => 'required|string|max:255',

@@ -17,11 +17,13 @@ class MatchingController extends Controller
     }
 
     // Show the form for creating a new matching assessment
-    public function create()
+    public function create(Request $request)
     {
-        $stories = Story::all();
-
-        return view('matching.create_matching', compact('stories'));
+        // Get story_id from query parameter
+        $storyId = $request->query('story_id');
+        $story = Story::findOrFail($storyId); 
+    
+        return view('matching.create_matching', compact('story'));
     }
 
     // Store a newly created matching assessment
@@ -55,17 +57,18 @@ class MatchingController extends Controller
 
         // Redirect back to the story detail page
         return redirect()->route('story.detail', ['story_id' => $request->story_id])
+                         ->withFragment('matching')
                          ->with('success', 'Matching assessment created successfully.');
     }
 
     // Show the form for editing a matching assessment
     public function edit(string $id_asses)
 {
-    $assessment = Matching::findOrFail($id_asses);
-    $story = $assessment->story; // Assuming there is a relationship between Matching and Story
+    $matching = Matching::findOrFail($id_asses);
+    $story = $matching->story; // Assuming there is a relationship between Matching and Story
     $stories = Story::all();
 
-    return view('matching.edit_matching', compact('assessment', 'story', 'stories'));
+    return view('matching.edit_matching', compact('matching', 'story', 'stories')); 
 }
 
 
@@ -125,6 +128,7 @@ class MatchingController extends Controller
         $assessment->delete();
 
         return redirect()->route('story.detail', ['story_id' => $storyId])
+        ->withFragment('matching')
                          ->with('success', 'Matching assessment deleted successfully.');
     }
 }

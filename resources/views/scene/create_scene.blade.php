@@ -1,6 +1,7 @@
 <x-app-layout>
-    <div class="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-        <h2 class="text-2xl font-semibold mb-6">Tambah Scene Baru</h2>
+<div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center">Add New Scene</h2>
+        <p class="mt-2 text-gray-600 dark:text-gray-400 text-center">for "{{ $story->title }}"</p>
 
         @if (session('success'))
             <div class="mb-4 text-green-600">
@@ -11,32 +12,22 @@
         <form id="scene" action="{{ route('scene.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <!-- Dropdown untuk memilih story -->
+            <input type="hidden" name="story_id" value="{{ $story->story_id }}">
+
             <div class="mb-4">
-                <label for="story_id" class="block text-sm font-medium text-gray-700">Cerita</label>
-                <select name="story_id" id="story_id" required
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-500">
-                    <option value="">Pilih Cerita</option>
-
-                    @foreach ($m_story as $story)  <!-- Ubah dari $t_scene_story ke $m_story -->
-                        <option value="{{ $story->story_id }}">{{ $story->title }}</option>
-                    @endforeach
-
-                </select>
-                @error('story_id')
-                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                <label for="story" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Story</label>
+                <input type="text" id="story" value="{{ $story->title }}" disabled class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300" readonly>
             </div>
 
-            <!-- Input gambar untuk Scene -->
+            <!-- Input Image untuk Scene -->
             <div class="mb-4">
-                <label for="picture" class="block text-sm font-medium text-gray-700">Gambar Scene</label>
+                <label for="picture" class="block text-sm font-medium text-gray-700">Scene Image</label>
                 <input type="file" name="picture" id="picture" required accept="image/*"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-500" />
                 @error('picture')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                 @enderror
-                <!-- Preview Gambar -->
+                <!-- Preview Image -->
                 <img id="imagePreview" class="mt-4 w-full h-auto hidden" />
             </div>
 
@@ -67,7 +58,7 @@
 
             <!-- Input urutan scene -->
             <div class="mb-4">
-                <label for="order" class="block text-sm font-medium text-gray-700">Urutan Scene</label>
+                <label for="order" class="block text-sm font-medium text-gray-700">Scene Order</label>
                 <input type="number" name="order" id="order" required
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-500" 
                     value="{{ old('order') }}" />
@@ -76,12 +67,11 @@
                 @enderror
             </div>
 
-            <div class="mt-6">
-                <!-- Change button type to button to avoid automatic form submission -->
-                <button type="button" onclick="confirmCreate()" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-300">
-                    Simpan Data
+            <div class="text-center mt-8">
+                <button type="button" onclick="confirmCreate()" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Save Data
                 </button>
-            </div>  
+            </div> 
         </form>
     </div>
 
@@ -119,29 +109,36 @@
         });
     </script>
     <script>
-        function confirmCreate() {
-            Swal.fire({
-                title: 'Konfirmasi',
-                text: "Apakah Anda yakin ingin menyimpan data ini?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, simpan!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Tampilkan SweetAlert untuk berhasil menyimpan data
-                    Swal.fire({
-                        title: 'Sukses!',
-                        text: 'Data berhasil disimpan.',
-                        icon: 'success',
-                        confirmButtonText: 'Oke'
-                    }).then(() => {
-                        // Kirim form setelah pengguna menekan "Oke"
-                        document.getElementById('scene').submit();
-                    });
-                }
-            });
-        }
-    </script>
+    function confirmCreate() {
+        Swal.fire({
+            title: 'Confirmation',
+            text: "Are you sure you want to add this data?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#007bff',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Add this data!',
+            customClass: {
+                confirmButton: 'swal2-confirm swal2-styled',
+                cancelButton: 'swal2-cancel swal2-styled'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Show success alert
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Data has been saved.',
+                    icon: 'success',
+                    confirmButtonText: 'Okay',
+                    customClass: {
+                        confirmButton: 'swal2-confirm swal2-styled'
+                    }
+                }).then(() => {
+                    // Submit the form after the user presses "Okay"
+                    document.getElementById('scene').submit();
+                });
+            }
+        });
+    }
+</script>
 </x-app-layout>

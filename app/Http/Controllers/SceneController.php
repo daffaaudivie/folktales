@@ -9,34 +9,26 @@ use Illuminate\Support\Facades\Storage;
 
 class SceneController extends Controller
 {
-    // Fungsi Admin untuk menampilkan semua scene
+
     public function index()
     {
-        // Ambil semua data dari t_scene_story beserta relasinya
         $t_scene_story = Scene::all();
     
         return view('scene.scene', compact('t_scene_story'));
 
-        // Ambil semua data dari m_story untuk dropdown
         $m_story = Story::all();
 
         return view('scene.scene', compact('scenes', 'm_story'));
     }
 
-    // Menampilkan form pembuatan scene
-    public function create()
-{
-    // Ambil semua story untuk dropdown
-    $m_story = Story::all();
-
-    // Ambil semua scene untuk ditampilkan
-    $scenes = Scene::with('story')->get(); // Menambahkan ini
-
-    return view('scene.create_scene', compact('m_story', 'scenes')); // Mengirimkan variabel scenes
-}
-
+    public function create(Request $request)
+    {
+        $storyId = $request->query('story_id');
+        $story = Story::findOrFail($storyId); 
     
-    // Menyimpan data scene
+        return view('scene.create_scene', compact('story'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -154,7 +146,7 @@ class SceneController extends Controller
         // Redirect ke detail story
         return redirect()->route('story.detail', ['story_id' => $storyId])
                         ->with('success', 'Assessment deleted successfully.')
-                        ->withFragment('truefalse');
+                        ->withFragment('scene');
     }
 
 

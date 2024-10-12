@@ -7,6 +7,7 @@ use App\Http\Controllers\SceneController;
 use App\Http\Controllers\MultipleController;
 use App\Http\Controllers\TrueFalseController;
 use App\Http\Controllers\MatchingController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,8 +62,9 @@ Route::resource('truefalse', TrueFalseController::class);
 Route::get('/create_matching', [MatchingController::class, 'create'])->name('matching.create');
 Route::post('/create_matching', [MatchingController::class, 'store'])->name('matching.store');
 Route::get('/matching/edit/{id_asses}', [MatchingController::class, 'edit'])->name('matching.edit');
+Route::put('/matching/{id_asses}', [MatchingController::class, 'update'])->name('matching.update');
 
-
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
 

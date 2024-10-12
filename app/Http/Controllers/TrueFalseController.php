@@ -19,35 +19,33 @@ class TrueFalseController extends Controller
     }
 
     // Menampilkan form pembuatan assessment
-    public function create()
+    public function create(Request $request)
     {
-        // Ambil semua data dari m_story untuk dropdown
-        $stories = Story::all();
-
-        // Ambil semua assessment untuk ditampilkan
-        $assessments = TrueFalse::with('story')->get();
-
-        return view('truefalse.create_tf', compact('stories', 'assessments'));
+        // Get story_id from query parameter
+        $storyId = $request->query('story_id');
+        $story = Story::findOrFail($storyId); 
+    
+        return view('truefalse.create_tf', compact('story'));
     }
-
-    // Menyimpan data assessment baru
+    
     public function store(Request $request)
     {
-        // Validasi input
+        // Validation
         $request->validate([
             'story_id' => 'required|exists:m_story,story_id',
             'question' => 'required|string|max:255',
             'answer'   => 'required|boolean',
         ]);
-
-        // Simpan data assessment baru
+    
+        // Save new assessment data
         TrueFalse::create($request->all());
-
-        // Redirect ke halaman detail story dengan flash message untuk alert
+    
+        // Redirect to story detail page with success message
         return redirect()->route('story.detail', ['story_id' => $request->story_id])
-                        ->withFragment('truefalse') // Mengarahkan ke section
+                        ->withFragment('truefalse')
                         ->with('success', 'Assessment created successfully.');
     }
+
 
 
 

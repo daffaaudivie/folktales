@@ -2,8 +2,8 @@
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
         <!-- Judul Halaman -->
         <div class="mb-6 text-center">
-            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">List Data Story</h2>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Berikut adalah daftar story yang telah dibuat</p>
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">List Story Data</h2>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Here is the list of stories that have been created.</p>
         </div>
 
         <div class="flex justify-end">

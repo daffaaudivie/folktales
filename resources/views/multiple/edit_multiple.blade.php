@@ -3,7 +3,7 @@
         <!-- Judul Halaman -->
         <div class="mb-6 text-center">
             <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">Edit Multiple Assessment</h2>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Edit detail assessment yang telah dibuat</p>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">Edit the details of the assessment that have been created.t</p>
         </div>
 
         <!-- Form Edit Assessment -->
@@ -11,14 +11,9 @@
             @csrf
             @method('PUT')
 
-            <!-- Dropdown Story -->
             <div class="mb-6">
                 <label for="story_id" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Story</label>
-                <select name="story_id" id="story_id" disabled class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600">
-                    @foreach ($stories as $story)
-                        <option value="{{ $story->story_id }}" {{ $assessment->story_id == $story->story_id ? 'selected' : '' }}>{{ $story->title }}</option>
-                    @endforeach
-                </select>
+                <input type="text" name="story_id" id="story_id" value="{{ $assessment->story->title }}" disabled class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300" readonly>
             </div>
 
             <!-- Question -->
@@ -46,10 +41,9 @@
             </div>
 
             <!-- Tombol Submit -->
-            <div class="flex justify-center text-center mt-4">
-                <!-- Ubah type submit menjadi button -->
-                <button type="button" onclick="confirmEdit()" class="flex justify-center items-center bg-green-400 hover:bg-green-500 text-dark-400 font-semibold py-2 px-4 rounded-lg">
-                    Simpan Perubahan
+            <div class="text-center mt-8">
+                <button type="button" onclick="confirmEdit()" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Save Changes
                 </button>
             </div>
         </form>
@@ -58,23 +52,23 @@
     <script>
         function confirmEdit() {
             Swal.fire({
-                title: 'Konfirmasi',
-                text: "Apakah Anda yakin ingin mengedit data ini?",
+                title: 'Confirmation',
+                text: "Are you sure you want to edit this data?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, simpan!'
+                confirmButtonText: 'Yes, save!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Tampilkan SweetAlert untuk berhasil menyimpan data
+                    // Show SweetAlert for successful data saving
                     Swal.fire({
-                        title: 'Sukses!',
-                        text: 'Data berhasil diedit.',
+                        title: 'Success!',
+                        text: 'Data has been edited successfully.',
                         icon: 'success',
-                        confirmButtonText: 'Oke'
+                        confirmButtonText: 'Okay'
                     }).then(() => {
-                        // Kirim form setelah pengguna menekan "Oke"
+                        // Submit the form after the user presses "Okay"
                         document.getElementById('multiple').submit();
                     });
                 }

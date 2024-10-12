@@ -2,8 +2,8 @@
     <div class="max-w-4xl mx-auto py-8">
         <!-- Judul Halaman -->
         <div class="mb-6 text-center">
-            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">Edit Story</h2>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Edit detail story yang telah dibuat</p>
+            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">Edit Story Data</h2>
+            <p class="mt-2 text-gray-600 dark:text-gray-400">for "{{ $story->title }}"</p>
         </div>
 
         <!-- Form Edit Story -->
@@ -13,8 +13,8 @@
 
             <!-- Title -->
             <div class="mb-6">
-                <label for="title" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Judul</label>
-                <input type="text" id="title" name="title" value="{{ $story->title }}" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600" required>
+                <label for="story_id" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Story</label>
+                <input type="text" name="story_id" id="story_id" value="{{ $story->title }}" disabled class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300" readonly>
             </div>
 
             <!-- Deskripsi -->
@@ -46,7 +46,7 @@
 
                 <!-- Preview Gambar -->
                 <div class="mt-4">
-                    <p class="text-sm text-gray-500 dark:text-gray-300">Preview Gambar:</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-300">Image Preview   :</p>
                     <img id="cover-preview" class="w-80 h-80 object-cover rounded-lg shadow-md hidden">
                 </div>
             </div>
@@ -55,15 +55,15 @@
             <div class="mb-6">
                 <label for="status" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                 <select name="status" id="status" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600">
-                    <option value="1" {{ $story->status == 1 ? 'selected' : '' }}>Aktif</option>
-                    <option value="2" {{ $story->status == 2 ? 'selected' : '' }}>Nonaktif</option>
+                    <option value="1" {{ $story->status == 1 ? 'selected' : '' }}>Active</option>
+                    <option value="2" {{ $story->status == 2 ? 'selected' : '' }}>Nonactive</option>
                 </select>
             </div>
 
             <!-- Tombol Simpan -->
-            <div class="text-center mt-4 flex justify-center">
-                <button type="button" onclick="confirmEdit()" class="flex justify-center items-center bg-green-400 hover:bg-green-500 text-dark-400 font-semibold py-2 px-4 rounded-lg">
-                    Simpan Perubahan
+            <div class="text-center mt-8">
+                <button type="button" onclick="confirmEdit()" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                    Save Changes
                 </button>
             </div>
         </form>
@@ -90,23 +90,23 @@
     <script>
         function confirmEdit() {
             Swal.fire({
-                title: 'Konfirmasi',
-                text: "Apakah Anda yakin ingin mengedit data ini?",
+                title: 'Confirmation',
+                text: "Are you sure you want to edit this data?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, simpan!'
+                confirmButtonText: 'Yes, save!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Tampilkan SweetAlert untuk berhasil menyimpan data
+                    // Show SweetAlert for successful data saving
                     Swal.fire({
-                        title: 'Sukses!',
-                        text: 'Data berhasil diedit.',
+                        title: 'Success!',
+                        text: 'Data has been edited successfully.',
                         icon: 'success',
-                        confirmButtonText: 'Oke'
+                        confirmButtonText: 'Okay'
                     }).then(() => {
-                        // Kirim form setelah pengguna menekan "Oke"
+                        // Submit the form after the user presses "Okay"
                         document.getElementById('story').submit();
                     });
                 }

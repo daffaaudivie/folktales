@@ -36,11 +36,11 @@
         <div class="max-w-8xl mx-auto mt-12 p-6 bg-white rounded-lg shadow-md">
             <div class="text-center mb-6">
                 <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">List Data Scene ( {{ $story->title }} )</h2>
-                <p class="mt-2 text-gray-600 dark:text-gray-400">Berikut adalah daftar scene yang telah dibuat</p>
+                <p class="mt-2 text-gray-600 dark:text-gray-400">Here is the list of scenes that have been created.</p>
             </div>
-            <a class="flex justify-end" href="{{ url('/create_scene') }}">
+            <a class="flex justify-end" href="{{ route('scene.create', ['story_id' => $story->story_id]) }}">
                 <button class="bg-transparent hover:bg-green-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-                    Add New Scene +
+                    Add New Scene  +
                 </button>
             </a>
 
@@ -51,7 +51,7 @@
                         <th scope="col" class="px-6 py-3 w-1/6">Narasi</th>
                         <th scope="col" class="px-6 py-3 w-1/4">Picture</th>
                         <th scope="col" class="px-6 py-3 w-1/4">Voice Over</th>
-                        <th scope="col" class="px-6 py-3">Aksi</th>
+                        <th scope="col" class="px-6 py-3">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -103,11 +103,11 @@
                 <p class="mt-2 text-gray-600 dark:text-gray-400">Here is the list of multiple choice questions related to this story.</p>
             </div>
 
-            <a class="flex justify-end" href="{{ url('/create_multiple') }}">
-                <button class="bg-transparent hover:bg-green-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-                    Add Question +
-                </button>
-            </a>
+            <a class="flex justify-end" href="{{ route('multiple.create', ['story_id' => $story->story_id]) }}">
+            <button class="bg-transparent hover:bg-green-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
+                Add Question +
+            </button>
+        </a>
             <table class="mt-3 w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-center text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -197,58 +197,58 @@
         </script>
 
         <!-- Tabel True False -->
-    <section id="truefalse">
-    <div class="max-w-8xl mx-auto mt-12 p-6 bg-white rounded-lg shadow-md">
-        <div class="text-center mb-6">
-            <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">True False Question ({{ $story->title }})</h2>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Here is the list of True/False questions related to this story.</p>
-        </div>
+        <section id="truefalse">
+        <div class="max-w-8xl mx-auto mt-12 p-6 bg-white rounded-lg shadow-md">
+            <div class="text-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800 dark:text-gray-200">True False Questions ({{ $story->title }})</h2>
+                <p class="mt-2 text-gray-600 dark:text-gray-400">Here is the list of True/False questions related to this story.</p>
+            </div>
 
-        <a class="flex justify-end" href="{{ url('/create_tf') }}">
-            <button class="bg-transparent hover:bg-green-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
-                Add True False +
-            </button>
-        </a>
+            <a class="flex justify-end" href="{{ route('truefalse.create', ['story_id' => $story->story_id]) }}">
+                <button class="bg-transparent hover:bg-green-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
+                    Add True False +
+                </button>
+            </a>
 
-        <table class="mt-3 w-full text-sm text-left text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-center text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">No</th>
-                <th scope="col" class="px-6 py-3">Question</th>
-                <th scope="col" class="px-6 py-3">Answer</th>
-                <th scope="col" class="px-6 py-3">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        @forelse ($trueFalseQuestions as $index => $trueFalse)
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
-                <td class="px-6 py-4">{{ $trueFalse->question }}</td>
-                <td class="px-6 py-4">{{ $trueFalse->answer ? 'True' : 'False' }}</td>
-                <td class="px-6 py-4">
-                    <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
-                        <a href="{{ route('truefalse.edit', $trueFalse->id_asses) }}">
-                            <button type="button" class="w-full sm:w-auto text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">Edit</button>
-                        </a>
-                        <!-- Tombol Delete -->
-                        <form onsubmit="return confirmDelete(event)" action="{{ route('truefalse.destroy', $trueFalse->id_asses) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="w-full sm:w-auto text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Delete</button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-        @empty
-            <tr>
-                <td colspan="4" class="px-6 py-4 text-center text-gray-500">
-                    Tidak ada pertanyaan True/False yang terkait dengan cerita ini.
-                </td>
-            </tr>
-        @endforelse
-        </tbody>
-    </table>
-    </section>
+                <table class="mt-3 w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-center text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">No</th>
+                        <th scope="col" class="px-6 py-3">Question</th>
+                        <th scope="col" class="px-6 py-3">Answer</th>
+                        <th scope="col" class="px-6 py-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @forelse ($trueFalseQuestions as $index => $trueFalse)
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="px-6 py-4 text-center">{{ $index + 1 }}</td>
+                        <td class="px-6 py-4">{{ $trueFalse->question }}</td>
+                        <td class="px-6 py-4">{{ $trueFalse->answer ? 'True' : 'False' }}</td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
+                                <a href="{{ route('truefalse.edit', $trueFalse->id_asses) }}">
+                                    <button type="button" class="w-full sm:w-auto text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-1 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-gray-600 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-800">Edit</button>
+                                </a>
+                                <!-- Tombol Delete -->
+                                <form onsubmit="return confirmDelete(event)" action="{{ route('truefalse.destroy', $trueFalse->id_asses) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-full sm:w-auto text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                            Tidak ada pertanyaan True/False yang terkait dengan cerita ini.
+                        </td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
+        </section>
 
      <!-- Tabel Matching -->
     <div class="max-w-8xl mx-auto mt-12 p-6 bg-white rounded-lg shadow-md">
@@ -257,13 +257,14 @@
             <p class="mt-2 text-gray-600 dark:text-gray-400">Here is the matching question related to this story.</p>
         </div>
 
-        <a class="flex justify-end mb-4" href="{{ url('/create_matching') }}">
+        <a class="flex justify-end mb-3" href="{{ route('matching.create', ['story_id' => $story->story_id]) }}">
                 <button class="bg-transparent hover:bg-green-500 text-gray-700 font-semibold hover:text-white py-2 px-4 border border-green-500 hover:border-transparent rounded">
                     Add Question +
                 </button>
             </a>
 
     @if($matching)
+    <script id="matching"></script>
     <table class="w-full text-sm text-center text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
             <tr>
