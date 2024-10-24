@@ -12,13 +12,16 @@ class SceneController extends Controller
 
     public function index()
     {
-        $t_scene_story = Scene::all();
     
+        if (request()->wantsJson()) {
+            $scenes = Scene::all();
+            return response()->json([
+                'status' => 'success',
+                'data' => $scenes
+            ]);
+        }
+        $t_scene_story = Scene::all();
         return view('scene.scene', compact('t_scene_story'));
-
-        $m_story = Story::all();
-
-        return view('scene.scene', compact('scenes', 'm_story'));
     }
 
     public function create(Request $request)
@@ -54,8 +57,17 @@ class SceneController extends Controller
             'order' => $request->order,
         ]);
 
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Scene created successfully',
+                'data' => $scene
+            ], 201);
+        }
+
+        // Jika bukan API, return redirect seperti biasa
         return redirect()->route('story.detail', ['story_id' => $request->story_id])
-                        ->withFragment('scene') // Mengarahkan ke section
+                        ->withFragment('scene')
                         ->with('success', 'Assessment created successfully.');
     }
 
@@ -115,10 +127,17 @@ class SceneController extends Controller
     // Update data assessment
     $scene->update($request->all());
 
-    // Redirect back to the story detail page
-    return redirect()->route('story.detail', ['story_id' => $storyId])
-                     ->with('success', 'Assessment edited successfully.')
-                     ->withFragment('scene');
+    if ($request->wantsJson()) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Scene updated successfully',
+            'data' => $scene
+        ]);
+    }
+
+    return redirect()->route('story.detail', ['story_id' => $scene->story_id])
+                 ->with('success', 'Assessment edited successfully.')
+                 ->withFragment('scene');
 }
 
 
@@ -143,7 +162,12 @@ class SceneController extends Controller
         // Hapus data assessment
         $scene->delete();
 
-        // Redirect ke detail story
+        if (request()->wantsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Scene deleted successfully'
+            ]);
+        }
         return redirect()->route('story.detail', ['story_id' => $storyId])
                         ->with('success', 'Assessment deleted successfully.')
                         ->withFragment('scene');
@@ -162,16 +186,48 @@ class SceneController extends Controller
         return view('story.detail_story', compact('story', 't_scene_story'));
     }
 
+    public function getScenesByStory($storyId)
+    {
+        try {
+            $scenes = Scene::where('story_id', $storyId)->get();
+            return response()->json([
+                'status' => 'success',
+                'data' => $scenes
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error retrieving scenes'
+            ], 400);
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            $scene = Scene::findOrFail($id);
+            return response()->json([
+                'status' => 'success',
+                'data' => $scene
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Scene not found'
+            ], 404);
+        }
+    }
+
     public function showAssessmentDetail($story_id)
-{
-    // Ambil story berdasarkan ID
-    $story = Story::findOrFail($story_id);
+    {
+        // Ambil story berdasarkan ID
+        $story = Story::findOrFail($story_id);
 
-    // Ambil semua assessment yang terkait dengan story ini
-    $t_scene_story = Scene::where('story_id', $story_id)->get();
+        // Ambil semua assessment yang terkait dengan story ini
+        $t_scene_story = Scene::where('story_id', $story_id)->get();
 
-    return view('story.detail_story', compact('story', 't_scene_story', 'scenes', 'multipleChoices'));
-}
-    
+        return view('story.detail_story', compact('story', 't_scene_story', 'scenes', 'multipleChoices'));
+    }
+        
 
 }
