@@ -21,6 +21,7 @@ class StoryController extends Controller
         if ($request->expectsJson()) {
             return response()->json($m_story);
         }
+        $m_story = Story::paginate(5);
 
         // Otherwise, return the view for web requests
         return view('story.story', compact('m_story'));
