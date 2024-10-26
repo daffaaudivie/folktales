@@ -82,62 +82,70 @@ class StoryController extends Controller
 
     
     public function edit($story_id)
-    {
-    // Mengambil data story berdasarkan id
-    $story = Story::findOrFail($story_id);
-    
-    // Mengambil daftar provinsi untuk dropdown
-    $response = file_get_contents('https://dev.farizdotid.com/api/daerahindonesia/provinsi');
-    $provinces = json_decode($response, true);
-    
-    $provinceList = [];
-    foreach ($provinces['provinsi'] as $province) {
-        $provinceList[] = [
-            'id' => $province['id'],
-            'name' => $province['nama']
-        ];
-    }
+{
+    try {
+        // Fetch story by ID
+        $story = Story::findOrFail($story_id);
 
-    // Mengirim data ke view
-    return view('story.edit_story', compact('story', 'provinceList'));
+        // Fetch province list from API
+        $response = file_get_contents('https://dev.farizdotid.com/api/daerahindonesia/provinsi');
+        $provinces = json_decode($response, true);
+
+        $provinceList = [];
+        foreach ($provinces['provinsi'] as $province) {
+            $provinceList[] = [
+                'id' => $province['id'],
+                'name' => $province['nama']
+            ];
+        }
+
+        // Pass data to view
+        return view('story.edit_story', compact('story', 'provinceList'));
+
+    } catch (Exception $e) {
+        return redirect()->back()->withErrors(['error' => 'Unable to fetch provinces.']);
+    }
 }
 
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'desc' => 'nullable|string',
+        'province' => 'nullable|string|max:50',
+        'cover' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Reduced size limit to 2MB
+        'status' => 'required|in:1,2', // Use 'in' validation for Active/Nonactive status
+    ]);
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'desc' => 'nullable|string',
-            'province' => 'nullable|string|max:50',
-            'cover' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:5048',
-            'status' => 'required|boolean',
-        ]);
+    $story = Story::findOrFail($id);
 
-        $story = Story::findOrFail($id);
-
-        if ($request->hasFile('cover')) {
-            if ($story->cover) {
-                Storage::disk('public')->delete($story->cover);
-            }
-            $coverPath = $request->file('cover')->store('story', 'public');
-        } else {
-            $coverPath = $story->cover;
+    if ($request->hasFile('cover')) {
+        // Delete old cover if it exists
+        if ($story->cover) {
+            Storage::disk('public')->delete($story->cover);
         }
-
-        $story->update([
-            'title' => $request->title,
-            'desc' => $request->desc,
-            'province' => $request->province,
-            'cover' => $coverPath,
-            'status' => $request->status,
-        ]);
-
-        if ($request->expectsJson()) {
-            return response()->json($story, 200);
-        }
-
-        return redirect()->route('story.index')->with('success', 'Berhasil Mengupdate Data');
+        // Store new cover
+        $coverPath = $request->file('cover')->store('story', 'public');
+    } else {
+        $coverPath = $story->cover;
     }
+
+    $story->update([
+        'title' => $request->title,
+        'desc' => $request->desc,
+        'province' => $request->province,
+        'cover' => $coverPath,
+        'status' => $request->status,
+    ]);
+
+    // Check if JSON is expected
+    if ($request->expectsJson()) {
+        return response()->json($story, 200);
+    }
+
+    return redirect()->route('story.index')->with('success', 'Story updated successfully');
+}
+
 
 
     public function destroy(Request $request, $id)

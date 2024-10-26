@@ -12,6 +12,7 @@
             @method('PUT')
 
             <!-- Title -->
+            <input type="hidden" name="title" value="{{ $story->title }}">
             <div class="mb-6">
                 <label for="story_id" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Story</label>
                 <input type="text" name="story_id" id="story_id" value="{{ $story->title }}" disabled class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300" readonly>
@@ -56,7 +57,7 @@
                 <label for="status" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                 <select name="status" id="status" class="block w-full p-2.5 border rounded-lg bg-gray-50 dark:bg-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600">
                     <option value="1" {{ $story->status == 1 ? 'selected' : '' }}>Active</option>
-                    <option value="2" {{ $story->status == 2 ? 'selected' : '' }}>Nonactive</option>
+                    <option value="2" {{ $story->status == 2 ? 'selected' : '' }}>Inactive</option>
                 </select>
             </div>
 

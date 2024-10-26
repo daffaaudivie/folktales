@@ -63,7 +63,7 @@
                 <select name="status" id="status" required
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-green-500">
                     <option value="1">Active</option>
-                    <option value="0">Nonactive</option>
+                    <option value="2">Inactive</option>
                 </select>
                 @error('status')
                     <p class="mt-2 text-sm text-red-600">{{ $message }}</p>

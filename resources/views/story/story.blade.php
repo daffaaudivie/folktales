@@ -47,7 +47,7 @@
                             {{ $story->province }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $story->status ? 'Active' : 'Inactive' }}
+                            {{ $story->status == 1 ? 'Active' : 'Inactive' }}
                         </td>
                         <td class="px-6 py-4">
                             <a href="{{ route('story.detail', $story->story_id) }}">
