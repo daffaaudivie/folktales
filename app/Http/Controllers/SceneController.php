@@ -65,7 +65,6 @@ class SceneController extends Controller
             ], 201);
         }
 
-        // Jika bukan API, return redirect seperti biasa
         return redirect()->route('story.detail', ['story_id' => $request->story_id])
                         ->withFragment('scene')
                         ->with('success', 'Assessment created successfully.');
@@ -81,7 +80,8 @@ class SceneController extends Controller
     }
 
     // Mengupdate data scene
-    public function update(Request $request, string $scene_story_id)
+    // Controller
+public function update(Request $request, string $scene_story_id)
 {
     $request->validate([
         'story_id' => 'nullable|exists:m_story,story_id',
@@ -122,11 +122,6 @@ class SceneController extends Controller
         'order' => $request->order,
     ]);
 
-    $storyId = $scene->story_id;
-
-    // Update data assessment
-    $scene->update($request->all());
-
     if ($request->wantsJson()) {
         return response()->json([
             'status' => 'success',
@@ -136,12 +131,11 @@ class SceneController extends Controller
     }
 
     return redirect()->route('story.detail', ['story_id' => $scene->story_id])
-                 ->with('success', 'Assessment edited successfully.')
+                 ->with('success', 'Scene edited successfully.')
                  ->withFragment('scene');
 }
 
 
-    // Menghapus data scene
     public function destroy($scene_story_id)
     {
         $scene = Scene::findOrFail($scene_story_id);

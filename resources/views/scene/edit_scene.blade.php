@@ -8,8 +8,8 @@
 
         <!-- Form Edit Scene -->
         <form id="scene" action="{{ route('scene.update', $scene->scene_story_id) }}" method="POST" enctype="multipart/form-data" class="bg-white shadow-md rounded-lg p-6">
-            @csrf
-            @method('PUT')
+        @csrf
+        @method('PUT')
             
             <div class="mb-6">
                 <label for="story_title" class="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">Judul Story</label>
